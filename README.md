@@ -61,6 +61,25 @@ Energía eléctrica edificio,600
 Mantenimiento y reparaciones,43.26
 ```
 
-## 🌐 Demo
+## 🌐 Demo y Despliegue
 
-La aplicación está disponible en: [URL de tu despliegue]
+### GitHub Pages
+Esta aplicación está configurada para desplegarse automáticamente en GitHub Pages.
+
+### Pasos para desplegar:
+1. Sube este repositorio a GitHub
+2. Ve a Settings → Pages en tu repositorio
+3. Selecciona "GitHub Actions" como source
+4. El despliegue será automático al hacer push a la rama main
+
+### Uso local
+```bash
+# Ejecutar en desarrollo
+npm run dev
+
+# Build para producción
+npm run build
+
+# Previsualizar build
+npm run preview
+```
