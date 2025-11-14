@@ -5,7 +5,7 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react(), tsconfigPaths()],
-  base: './', // Importante para GitHub Pages
+  base: '/calculadora_cuotas/', // Importante para GitHub Pages
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
