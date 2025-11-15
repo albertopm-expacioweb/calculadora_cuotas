@@ -3,7 +3,6 @@ import { getSupabase } from '../lib/supabase'
 import { LogOut } from 'lucide-react'
 
 const AuthForm: React.FC = () => {
-  const [mode, setMode] = useState<'login' | 'register'>('login')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -14,13 +13,8 @@ const AuthForm: React.FC = () => {
     setError('')
     try {
       const supabase = getSupabase()
-      if (mode === 'login') {
-        const { error } = await supabase.auth.signInWithPassword({ email, password })
-        if (error) setError(error.message)
-      } else {
-        const { error } = await supabase.auth.signUp({ email, password })
-        if (error) setError(error.message)
-      }
+      const { error } = await supabase.auth.signInWithPassword({ email, password })
+      if (error) setError(error.message)
     } catch (e: any) {
       setError(e?.message || 'Error de autenticación')
     } finally {
@@ -30,7 +24,7 @@ const AuthForm: React.FC = () => {
 
   return (
     <div className="max-w-md mx-auto bg-white rounded-xl shadow p-6">
-      <h2 className="text-xl font-bold mb-4">{mode === 'login' ? 'Acceder' : 'Registrarse'}</h2>
+      <h2 className="text-xl font-bold mb-4">Acceder</h2>
       <div className="space-y-3">
         <input
           type="email"
@@ -54,19 +48,9 @@ const AuthForm: React.FC = () => {
           disabled={loading}
           className="w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded px-4 py-2"
         >
-          {loading ? 'Procesando…' : mode === 'login' ? 'Entrar' : 'Crear cuenta'}
+          {loading ? 'Procesando…' : 'Entrar'}
         </button>
-        <p className="text-sm text-gray-600 text-center">
-          {mode === 'login' ? (
-            <>¿No tienes cuenta?{' '}
-              <button onClick={() => setMode('register')} className="text-indigo-600 underline">Regístrate</button>
-            </>
-          ) : (
-            <>¿Ya tienes cuenta?{' '}
-              <button onClick={() => setMode('login')} className="text-indigo-600 underline">Accede</button>
-            </>
-          )}
-        </p>
+        <p className="text-sm text-gray-600 text-center">El registro está deshabilitado.</p>
       </div>
     </div>
   )
