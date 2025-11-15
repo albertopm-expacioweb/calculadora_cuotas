@@ -13,10 +13,11 @@
     "deploy": "gh-pages -d dist -b gh-pages --repo https://github.com/albertopm-expacioweb/calculadora_cuotas.git"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.81.1",
+    "clsx": "^2.1.0",
+    "lucide-react": "^0.344.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "lucide-react": "^0.344.0",
-    "clsx": "^2.1.0",
     "tailwind-merge": "^2.2.1"
   },
   "devDependencies": {
