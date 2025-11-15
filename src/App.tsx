@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Upload, FileText, Calculator, Download, Building, Car } from 'lucide-react';
+import { Upload, FileText, Calculator, Download, Building, Car, ChevronDown } from 'lucide-react';
 
 interface Gasto {
   concepto: string;
@@ -26,6 +26,7 @@ const App: React.FC = () => {
   const [cuotas, setCuotas] = useState<CuotaPropietario[]>([]);
   const [error, setError] = useState<string>('');
   const [isCalculating, setIsCalculating] = useState(false);
+  const [openOwners, setOpenOwners] = useState<Record<string, boolean>>({});
 
   // Porcentajes de participación actualizados según tus especificaciones
   const porcentajesParticipacion = {
@@ -199,6 +200,10 @@ const App: React.FC = () => {
     document.body.removeChild(link);
   };
 
+  const toggleOwner = (owner: string) => {
+    setOpenOwners(prev => ({ ...prev, [owner]: !prev[owner] }));
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
       <div className="max-w-6xl mx-auto">
@@ -345,23 +350,37 @@ const App: React.FC = () => {
                 <div className="grid gap-6">
                   {cuotas.map(cuota => (
                     <div key={cuota.propietario} className="bg-white rounded-lg p-4 shadow-sm">
-                      <h4 className="font-bold text-lg text-gray-800 mb-3">{cuota.propietario}</h4>
-                      <div className="grid md:grid-cols-3 gap-4">
+                      <button
+                        onClick={() => toggleOwner(cuota.propietario)}
+                        className="w-full flex items-center justify-between font-bold text-lg text-gray-800 mb-3"
+                        aria-expanded={!!openOwners[cuota.propietario]}
+                      >
+                        <span>{cuota.propietario}</span>
+                        <ChevronDown className={`w-5 h-5 transition-transform ${openOwners[cuota.propietario] ? 'rotate-180' : ''}`} />
+                      </button>
+                      <div className={`${openOwners[cuota.propietario] ? 'grid' : 'hidden'} grid-cols-1 gap-4`}>
                         <div>
                           <h5 className="font-semibold text-blue-800 mb-2 flex items-center gap-2">
                             <Calculator className="w-4 h-4" />
                             Tabla 1 - General
                           </h5>
                           <div className="space-y-1 text-sm">
+                            <div className="grid grid-cols-3 gap-2 font-semibold text-gray-700 mb-2">
+                              <div>Concepto</div>
+                              <div className="text-right">Mensual</div>
+                              <div className="text-right">Anual</div>
+                            </div>
                             {cuota.desglose.tabla1.map((gasto, idx) => (
-                              <div key={idx} className="flex justify-between">
+                              <div key={idx} className="grid grid-cols-3 gap-2">
                                 <span className="text-gray-600">{gasto.concepto} ({cuota.porcentaje}%):</span>
-                                <span className="font-medium">{gasto.importe.toFixed(2)} €</span>
+                                <span className="text-right">{(gasto.importe / 12).toFixed(2)} €</span>
+                                <span className="text-right">{gasto.importe.toFixed(2)} €</span>
                               </div>
                             ))}
-                            <div className="border-t pt-1 mt-2 font-semibold flex justify-between">
+                            <div className="border-t pt-1 mt-2 grid grid-cols-3 gap-2 font-semibold">
                               <span>Subtotal:</span>
-                              <span>{cuota.tabla1.toFixed(2)} €</span>
+                              <span className="text-right">{(cuota.tabla1 / 12).toFixed(2)} €</span>
+                              <span className="text-right">{cuota.tabla1.toFixed(2)} €</span>
                             </div>
                           </div>
                         </div>
@@ -373,15 +392,22 @@ const App: React.FC = () => {
                           </h5>
                           {cuota.desglose.tabla2.length > 0 ? (
                             <div className="space-y-1 text-sm">
+                              <div className="grid grid-cols-3 gap-2 font-semibold text-gray-700 mb-2">
+                                <div>Concepto</div>
+                                <div className="text-right">Mensual</div>
+                                <div className="text-right">Anual</div>
+                              </div>
                               {cuota.desglose.tabla2.map((gasto, idx) => (
-                                <div key={idx} className="flex justify-between">
+                                <div key={idx} className="grid grid-cols-3 gap-2">
                                   <span className="text-gray-600">{gasto.concepto} (1/7):</span>
-                                  <span className="font-medium">{gasto.importe.toFixed(2)} €</span>
+                                  <span className="text-right">{(gasto.importe / 12).toFixed(2)} €</span>
+                                  <span className="text-right">{gasto.importe.toFixed(2)} €</span>
                                 </div>
                               ))}
-                              <div className="border-t pt-1 mt-2 font-semibold flex justify-between">
+                              <div className="border-t pt-1 mt-2 grid grid-cols-3 gap-2 font-semibold">
                                 <span>Subtotal:</span>
-                                <span>{cuota.tabla2.toFixed(2)} €</span>
+                                <span className="text-right">{(cuota.tabla2 / 12).toFixed(2)} €</span>
+                                <span className="text-right">{cuota.tabla2.toFixed(2)} €</span>
                               </div>
                             </div>
                           ) : (
@@ -396,20 +422,32 @@ const App: React.FC = () => {
                           </h5>
                           {cuota.desglose.tabla3.length > 0 ? (
                             <div className="space-y-1 text-sm">
+                              <div className="grid grid-cols-3 gap-2 font-semibold text-gray-700 mb-2">
+                                <div>Concepto</div>
+                                <div className="text-right">Mensual</div>
+                                <div className="text-right">Anual</div>
+                              </div>
                               {cuota.desglose.tabla3.map((gasto, idx) => (
-                                <div key={idx} className="flex justify-between">
+                                <div key={idx} className="grid grid-cols-3 gap-2">
                                   <span className="text-gray-600">{gasto.concepto} ({((cuota.porcentaje / (100 - 20.67)) * 100).toFixed(2)}%):</span>
-                                  <span className="font-medium">{gasto.importe.toFixed(2)} €</span>
+                                  <span className="text-right">{(gasto.importe / 12).toFixed(2)} €</span>
+                                  <span className="text-right">{gasto.importe.toFixed(2)} €</span>
                                 </div>
                               ))}
-                              <div className="border-t pt-1 mt-2 font-semibold flex justify-between">
+                              <div className="border-t pt-1 mt-2 grid grid-cols-3 gap-2 font-semibold">
                                 <span>Subtotal:</span>
-                                <span>{cuota.tabla3.toFixed(2)} €</span>
+                                <span className="text-right">{(cuota.tabla3 / 12).toFixed(2)} €</span>
+                                <span className="text-right">{cuota.tabla3.toFixed(2)} €</span>
                               </div>
                             </div>
                           ) : (
                             <p className="text-sm text-gray-500 italic">No aplica al garaje</p>
                           )}
+                        </div>
+                        <div className="border-t pt-2 mt-4 grid grid-cols-3 gap-2 font-bold">
+                          <span>Total</span>
+                          <span className="text-right">{cuota.totalMensual.toFixed(2)} €</span>
+                          <span className="text-right">{cuota.totalAnual.toFixed(2)} €</span>
                         </div>
                       </div>
                     </div>
