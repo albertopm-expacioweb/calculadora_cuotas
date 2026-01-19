@@ -14,13 +14,13 @@ Aplicación web para calcular automáticamente las cuotas mensuales y anuales de
 
 - **Garaje**: 20.67%
 - **Bajo**: 20.67%
-- **1A**: 11.56%
-- **1B**: 9.08%
-- **1C**: 8.54%
-- **2A**: 13.16%
-- **2B**: 12.86%
-- **3A**: 12.27%
-- **3B**: 11.84%
+- **1A**: 8.61%
+- **1B**: 6.13%
+- **1C**: 5.59%
+- **2A**: 10.21%
+- **2B**: 9.91%
+- **3A**: 9.32%
+- **3B**: 8.89%
 
 ## 📋 Reglas de Cálculo
 

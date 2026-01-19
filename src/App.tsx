@@ -28,17 +28,17 @@ const App: React.FC = () => {
   const [isCalculating, setIsCalculating] = useState(false);
   const [openOwners, setOpenOwners] = useState<Record<string, boolean>>({});
 
-  // Porcentajes de participación actualizados según tus especificaciones
+  // Porcentajes de participación correctos (suman 100%)
   const porcentajesParticipacion = {
     'Garaje': 20.67,
     'Bajo': 20.67,
-    '1A': 11.56,
-    '1B': 9.08,
-    '1C': 8.54,
-    '2A': 13.16,
-    '2B': 12.86,
-    '3A': 12.27,
-    '3B': 11.84
+    '1A': 8.61,
+    '1B': 6.13,
+    '1C': 5.59,
+    '2A': 10.21,
+    '2B': 9.91,
+    '3A': 9.32,
+    '3B': 8.89
   };
 
   const propietariosConGaraje = ['1A', '1B', '1C', '2A', '2B', '3A', '3B'];
@@ -73,8 +73,34 @@ const App: React.FC = () => {
     lines.forEach((line, index) => {
       if (index === 0) return; // Saltar encabezado si existe
       
-      const [concepto, importeStr] = line.split(',').map(cell => cell.trim().replace(/"/g, ''));
-      const importe = parseFloat(importeStr);
+      // Parsear CSV manualmente para manejar comillas y comas correctamente
+      let parts: string[] = [];
+      let current = '';
+      let inQuotes = false;
+      
+      for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+        if (char === '"') {
+          inQuotes = !inQuotes;
+        } else if (char === ',' && !inQuotes) {
+          parts.push(current);
+          current = '';
+          continue;
+        }
+        current += char;
+      }
+      parts.push(current);
+
+      if (parts.length < 2) return;
+
+      const concepto = parts[0].trim().replace(/^"|"$/g, '');
+      const importeStr = parts[parts.length - 1].trim().replace(/^"|"$/g, '');
+      
+      // Convertir formato europeo (1.234,56) a formato americano (1234.56)
+      let importeLimpio = importeStr.replace(/\./g, ''); // Eliminar puntos de miles
+      importeLimpio = importeLimpio.replace(/,/, '.'); // Cambiar coma decimal por punto
+      
+      const importe = parseFloat(importeLimpio);
       
       if (concepto && !isNaN(importe) && importe > 0) {
         gastosParseados.push({ concepto, importe });
